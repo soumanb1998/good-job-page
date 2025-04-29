@@ -111,10 +111,18 @@
       }, 5000);
     });
 
-    // Handle "Press Me Again" button click
+    // Handle "Press Me Again" button click (skip "Press Me" button and show animation)
     showAgainBtn.addEventListener('click', () => {
       showAgainBtn.style.display = 'none'; // Hide "Press Me Again" button
-      btn.style.display = 'inline-block'; // Show "Press Me" button again
+      animBox.classList.remove('show'); // Reset animation
+      void animBox.offsetWidth; // Force reflow
+      animBox.classList.add('show'); // Show animation
+
+      // Hide animation and show "Press Me Again" after 5 seconds
+      setTimeout(() => {
+        animBox.classList.remove('show');
+        showAgainBtn.style.display = 'inline-block'; // Show "Press Me Again" button
+      }, 5000);
     });
   </script>
 </body>
