@@ -90,15 +90,31 @@
     <div class="message">GOOD JOB!</div>
   </div>
   <button id="showMessage">Press Me!</button>
+  <button id="showAgain" style="display:none;">Press Me Again!</button>
 
   <script>
     const btn = document.getElementById('showMessage');
     const animBox = document.getElementById('animation');
+    const showAgainBtn = document.getElementById('showAgain');
 
+    // Handle "Press Me" button click
     btn.addEventListener('click', () => {
+      btn.style.display = 'none'; // Hide "Press Me" button
       animBox.classList.remove('show'); // Reset animation
       void animBox.offsetWidth; // Force reflow
-      animBox.classList.add('show');
+      animBox.classList.add('show'); // Show animation
+
+      // Hide animation and show "Press Me Again" after 5 seconds
+      setTimeout(() => {
+        animBox.classList.remove('show');
+        showAgainBtn.style.display = 'inline-block'; // Show "Press Me Again" button
+      }, 5000);
+    });
+
+    // Handle "Press Me Again" button click
+    showAgainBtn.addEventListener('click', () => {
+      showAgainBtn.style.display = 'none'; // Hide "Press Me Again" button
+      btn.style.display = 'inline-block'; // Show "Press Me" button again
     });
   </script>
 </body>
