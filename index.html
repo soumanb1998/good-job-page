@@ -21,10 +21,6 @@
     }
 
     .button-container {
-      position: absolute;
-      top: 60%;
-      left: 50%;
-      transform: translate(-50%, -50%);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -133,7 +129,7 @@
     <div class="message">GOOD JOB!</div>
   </div>
   <div id="imagePopup" class="image-container">
-    <img src="Screenshot%202025-05-02%20154902.png" alt="Custom Image">
+    <img src="special.png" alt="Custom Image">
   </div>
   <div class="button-container">
     <button id="showMessage" class="show-button">Press Me!</button>
@@ -160,7 +156,7 @@
       }, 500);
     }
 
-    function showPopupSequence(isAgain) {
+    function showPopupSequence() {
       const name = prompt("What's your name?");
       const specialNames = ['matt', 'isaac', 'emilio'];
 
@@ -192,7 +188,7 @@
       btn.classList.add('hide-button');
       setTimeout(() => {
         btn.style.display = 'none';
-        showPopupSequence(false);
+        showPopupSequence();
       }, 500);
     });
 
@@ -201,7 +197,7 @@
       showAgainBtn.classList.add('hide-button');
       setTimeout(() => {
         showAgainBtn.style.display = 'none';
-        showPopupSequence(true);
+        showPopupSequence();
       }, 500);
     });
   </script>
