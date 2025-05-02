@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Good Job</title> <!-- Updated title -->
+  <title>Good Job</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     body {
@@ -20,6 +20,17 @@
       overflow: hidden;
     }
 
+    .button-container {
+      position: absolute;
+      top: 60%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
     button {
       padding: 1em 2em;
       background: #ffcc00;
@@ -30,10 +41,21 @@
       border-radius: 8px;
       cursor: pointer;
       box-shadow: 0 0 15px #ffcc00;
-      margin-top: 20px;
+      margin: 20px 0;
+      opacity: 0;
+      transform: scale(0);
+      animation: none;
     }
 
-    .circle-container {
+    .show-button {
+      animation: zoomIn 1.2s ease-out forwards;
+    }
+
+    .hide-button {
+      animation: zoomOut 0.5s ease-in forwards;
+    }
+
+    .circle-container, .image-container {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -49,14 +71,24 @@
       animation: none;
     }
 
-    .circle-container.show {
+    .circle-container.show, .image-container.show {
       animation: zoomIn 1.2s ease-out forwards;
+    }
+
+    .circle-container.hide, .image-container.hide {
+      animation: zoomOut 0.5s ease-in forwards;
     }
 
     .message {
       font-size: 1.2rem;
       text-align: center;
       color: #111;
+    }
+
+    .image-container img {
+      max-width: 80%;
+      max-height: 80%;
+      border-radius: 8px;
     }
 
     @keyframes zoomIn {
@@ -74,8 +106,19 @@
       }
     }
 
+    @keyframes zoomOut {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(0);
+        opacity: 0;
+      }
+    }
+
     @media (max-width: 500px) {
-      .circle-container {
+      .circle-container, .image-container {
         width: 200px;
         height: 200px;
       }
@@ -89,40 +132,77 @@
   <div id="animation" class="circle-container">
     <div class="message">GOOD JOB!</div>
   </div>
-  <button id="showMessage">Press Me!</button>
-  <button id="showAgain" style="display:none;">Press Me Again!</button>
+  <div id="imagePopup" class="image-container">
+    <img src="Screenshot%202025-05-02%20154902.png" alt="Custom Image">
+  </div>
+  <div class="button-container">
+    <button id="showMessage" class="show-button">Press Me!</button>
+    <button id="showAgain" style="display:none;">Press Me Again!</button>
+  </div>
 
   <script>
     const btn = document.getElementById('showMessage');
     const animBox = document.getElementById('animation');
     const showAgainBtn = document.getElementById('showAgain');
+    const imageBox = document.getElementById('imagePopup');
 
-    // Handle "Press Me" button click
-    btn.addEventListener('click', () => {
-      btn.style.display = 'none'; // Hide "Press Me" button
-      animBox.classList.remove('show'); // Reset animation
-      void animBox.offsetWidth; // Force reflow
-      animBox.classList.add('show'); // Show animation
+    function showElementWithAnimation(element) {
+      element.classList.remove('hide');
+      void element.offsetWidth;
+      element.classList.add('show');
+    }
 
-      // Hide animation and show "Press Me Again" after 5 seconds
+    function hideElementWithAnimation(element, callback) {
+      element.classList.remove('show');
+      element.classList.add('hide');
       setTimeout(() => {
-        animBox.classList.remove('show');
-        showAgainBtn.style.display = 'inline-block'; // Show "Press Me Again" button
-      }, 5000);
+        callback();
+      }, 500);
+    }
+
+    function showPopupSequence(isAgain) {
+      const name = prompt("What's your name?");
+      const specialNames = ['matt', 'isaac', 'emilio'];
+
+      if (name && specialNames.includes(name.trim().toLowerCase())) {
+        showElementWithAnimation(imageBox);
+        setTimeout(() => {
+          hideElementWithAnimation(imageBox, () => {
+            showAgainBtn.style.display = 'inline-block';
+            showAgainBtn.classList.remove('hide-button');
+            void showAgainBtn.offsetWidth;
+            showAgainBtn.classList.add('show-button');
+          });
+        }, 5000);
+      } else {
+        showElementWithAnimation(animBox);
+        setTimeout(() => {
+          hideElementWithAnimation(animBox, () => {
+            showAgainBtn.style.display = 'inline-block';
+            showAgainBtn.classList.remove('hide-button');
+            void showAgainBtn.offsetWidth;
+            showAgainBtn.classList.add('show-button');
+          });
+        }, 5000);
+      }
+    }
+
+    btn.addEventListener('click', () => {
+      btn.classList.remove('show-button');
+      btn.classList.add('hide-button');
+      setTimeout(() => {
+        btn.style.display = 'none';
+        showPopupSequence(false);
+      }, 500);
     });
 
-    // Handle "Press Me Again" button click (skip "Press Me" button and show animation)
     showAgainBtn.addEventListener('click', () => {
-      showAgainBtn.style.display = 'none'; // Hide "Press Me Again" button
-      animBox.classList.remove('show'); // Reset animation
-      void animBox.offsetWidth; // Force reflow
-      animBox.classList.add('show'); // Show animation
-
-      // Hide animation and show "Press Me Again" after 5 seconds
+      showAgainBtn.classList.remove('show-button');
+      showAgainBtn.classList.add('hide-button');
       setTimeout(() => {
-        animBox.classList.remove('show');
-        showAgainBtn.style.display = 'inline-block'; // Show "Press Me Again" button
-      }, 5000);
+        showAgainBtn.style.display = 'none';
+        showPopupSequence(true);
+      }, 500);
     });
   </script>
 </body>
